@@ -1,22 +1,39 @@
 import { useEffect, useState } from "react"
 import FoodCard from "../Components/FoodCard"
 
+type Recipe = {
+  id: string;
+  name: string;
+  tag: string;
+  ingredients: string;
+  process: string;
+  minutes: number;
+  portions: number;
+  image: string | null;
+};
+
 export default function Home() {
 
-    // Test sample
-    const [recipes, setRecipes] = useState([{
-        id: "1",
-        name: "Rajská",
-        tag: "Hlavní chod",
-        ingredients: "Rajská",
-        process: "Vař",
-        minutes: 30,
-        portions: 2,
-        image: null,
-    }])
-
+    const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [tag, setTag] = useState("Vše")
     const [search, setSearch] = useState("")
+
+    // GET all recipes
+    async function getRecipes() {
+        try {
+            const response = await fetch("http://localhost:5000/api/recipes")
+            const data = await response.json()
+            if (data && data.length > 0) {
+                setRecipes(data)
+            }
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    useEffect(() => {
+        getRecipes()
+    }, []);
 
     return (
         <div className="min-h-screen">
@@ -30,14 +47,15 @@ export default function Home() {
                     <option className="cursor-pointer">Svačinka</option>
                 </select>
             </header>
+            
             <h1 className="text-5xl font-bold mt-10 mb-10">Rodinné recepty:</h1>
             <main className="grid grid-cols-4 gap-5">
                 {
-                    recipes
+                    recipes && recipes.length > 0
                         ? recipes
                             .filter(recipe => recipe.name.toLowerCase().startsWith(search.toLowerCase()) && (tag === recipe.tag || tag === "Vše"))
                             .map(recipe => <FoodCard key={recipe.id} recipe={recipe}/>)
-                        : <div>Nic se nenašlo...</div>
+                        : <div className="text-2xl font-bold">Nic se nenašlo...</div>
                 }
             </main>
         </div>

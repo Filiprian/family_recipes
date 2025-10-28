@@ -8,13 +8,14 @@ interface Recipe {
     process: string;
     minutes: number;
     portions: number;
-    image: null;
+    image: string;
 }
 
 export default function FoodCard({ recipe }: { recipe: Recipe }) {
 
     const navigate = useNavigate()
 
+    // On click navigates you to details page
     const handleClick = () => {
         navigate(`/details/${recipe.id}`)
     }
@@ -35,7 +36,7 @@ export default function FoodCard({ recipe }: { recipe: Recipe }) {
                 <img
                     className="max-h-[350px] rounded-xl w-full object-cover"
                     alt="Obrázek"
-                    src="#"
+                    src={`http://localhost:5000/${recipe.image}`}
                 />
             </div>
         </div>

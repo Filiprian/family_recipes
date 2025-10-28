@@ -1,8 +1,12 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 
 export default function Add() {
 
+    const navigate = useNavigate()
+
+    const [error, setError] = useState("")
     const [formData, setFormData] = useState({
         name: "",
         tag: "Polévka",
@@ -24,10 +28,56 @@ export default function Add() {
         setFormData({...formData, [name]: value});
     };
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const {name, files} = e.target;
+        if (files && files[0]) {
+            setFormData({...formData, [name]: files[0]});
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!formData.name || !formData.tag || !formData.ingredients || !formData.process || !formData.minutes || !formData.portions) {
+            setError("Vyplň všechna pole!")
             return;
+        }
+        if (parseInt(formData.minutes) < 0 || parseInt(formData.portions) < 0) {
+            return;
+        }
+
+        setError("")
+        const dataToSend = new FormData();
+        dataToSend.append("name", formData.name);
+        dataToSend.append("tag", formData.tag);
+        dataToSend.append("ingredients", formData.ingredients);
+        dataToSend.append("process", formData.process);
+        dataToSend.append("minutes", String(parseInt(formData.minutes) || 0));
+        dataToSend.append("portions", String(parseInt(formData.portions) || 0));
+        if (formData.image) {
+            dataToSend.append("image", formData.image);
+        }
+
+
+        try {
+            const response = await fetch("http://localhost:5000/api/recipes", {
+                method: "POST",
+                body: dataToSend
+            })
+            if (response.ok) {
+                setFormData({
+                    name: "",
+                    tag: "Polévka",
+                    ingredients: "",
+                    process: "",
+                    minutes: "",
+                    portions: "",
+                    image: null
+                })
+                navigate("/")
+            }
+        } catch (e) {
+            console.error(e)
+            setError("Něco se pokazilo")
         }
     }
 
@@ -101,6 +151,7 @@ export default function Add() {
                             type="file"
                             name="image"
                             accept="image/jpeg,image/png"
+                            onChange={handleFileChange}
                         />
                         <button
                             type="submit"
@@ -109,6 +160,7 @@ export default function Add() {
                         </button>
                     </div>
                 </form>
+                {error !== "" && <div>{error}</div>}
             </main>
         </div>
     )

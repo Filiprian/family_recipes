@@ -1,23 +1,56 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+
+interface Recipe {
+  id: string;
+  name: string;
+  tag: string;
+  ingredients: string;
+  process: string;
+  minutes: number;
+  portions: number;
+  image: string;
+}
 
 
 export default function Details() {
 
-    const params = useParams<{ id: string }>();
+    const {id} = useParams()
 
-    // Test sample
-    const [recipe, setRecipe] = useState({
-        id: "1",
-        name: "Rajská",
-        tag: "Hlavní chod",
-        ingredients: "Rajská",
-        process: "Vař",
-        minutes: "30",
-        portions: "2",
-        image: null,
-    })
+    const navigate = useNavigate();
+
+    const [recipe, setRecipe] = useState<Recipe | null>(null);
+
+    async function getRecipe() {
+        try {
+            const response = await fetch(`http://localhost:5000/api/recipes/${id}`)
+            const data = await response.json()
+            if (data) {
+                setRecipe(data)
+            }
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    async function onDelete(deleteId: string) {
+        try {
+            const response = await fetch(`http://localhost:5000/api/recipes/${deleteId}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+            });
+            if (response.ok) {
+                navigate("/")
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    useEffect(() => {
+        getRecipe()
+    }, [id]);
 
     return (
         <div className="relative min-h-screen">
@@ -55,6 +88,7 @@ export default function Details() {
                                             <FaEdit/> Upravit
                                         </button>
                                         <button
+                                            onClick={() => onDelete(recipe.id)}
                                             className="cursor-pointer flex items-center gap-2 self-start mt-2 p-2 rounded-xl text-xl"
                                         >
                                             <FaTrash/> Smazat
@@ -65,7 +99,7 @@ export default function Details() {
                                     <img
                                         className="rounded-xl max-h-[450px]"
                                         alt="Obrázek"
-                                        src="#"
+                                        src={`http://localhost:5000/${recipe.image}`}
                                     />
                                 </div>
                         </main>
