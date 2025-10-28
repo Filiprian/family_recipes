@@ -1,10 +1,12 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
 
 
 export default function Add() {
 
     const navigate = useNavigate()
+
+    const {id} = useParams()
 
     const [error, setError] = useState("")
     const [formData, setFormData] = useState({
@@ -20,6 +22,30 @@ export default function Add() {
     const inputStyle = "bg-gray-300 p-1 rounded-xl max-w-60"
     const textAreaStyle = "bg-gray-300 p-1 rounded-xl max-w-120 min-h-35"
     const labelStyle = "text-xl font-bold"
+
+    async function getRecipe() {
+        try {
+            const res = await fetch(`http://localhost:5000/api/recipes/${id}`)
+            const data = await res.json()
+            if (data) {
+                setFormData({
+                    name: data.name,
+                    tag: data.tag,
+                    ingredients: data.ingredients,
+                    process: data.process,
+                    minutes: data.minutes,
+                    portions: data.portions,
+                    image: data.image,
+                })
+            }
+        } catch (e) {
+            console.error("Failed while getting a recipe" + e)
+        }
+    }
+
+    useEffect(() => {
+        getRecipe()
+    }, [id]);
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -59,8 +85,11 @@ export default function Add() {
 
 
         try {
-            const response = await fetch("http://localhost:5000/api/recipes", {
-                method: "POST",
+            // Deciding between PUT or POST method
+            const url = id ? `http://localhost:5000/api/recipes/${id}` : "http://localhost:5000/api/recipes"
+            const method = id ? "PUT" : "POST"
+            const response = await fetch(url, {
+                method: method,
                 body: dataToSend
             })
             if (response.ok) {
@@ -83,7 +112,7 @@ export default function Add() {
 
     return(
         <div className="min-h-screen">
-            <h1 className="text-5xl font-bold mt-10 mb-10">Přidat recept:</h1>
+            <h1 className="text-5xl font-bold mt-10 mb-10">{id ? "Uprav recept:" : "Přidaj recept:"}</h1>
             <main className="p-2 flex flex-col items-center justify-center align-center gap-1">
                 <form onSubmit={handleSubmit} className="flex gap-50">
                     <div className="flex flex-col gap-3">
@@ -156,7 +185,7 @@ export default function Add() {
                         <button
                             type="submit"
                             className=" mt-10 self-start p-2 rounded-xl text-xl">
-                            Přidat recept
+                            {id ? "Upravit" : "Přidat"}
                         </button>
                     </div>
                 </form>

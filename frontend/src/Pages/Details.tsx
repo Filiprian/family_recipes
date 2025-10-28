@@ -83,12 +83,13 @@ export default function Details() {
                                 </div>
                                     <div className="flex gap-5">
                                         <button
+                                            onClick={() => navigate(`/add/${recipe.id}`)} // Edit recipe
                                             className="cursor-pointer flex items-center gap-2 self-start mt-2 p-2 rounded-xl text-xl"
                                         >
                                             <FaEdit/> Upravit
                                         </button>
                                         <button
-                                            onClick={() => onDelete(recipe.id)}
+                                            onClick={() => onDelete(recipe.id)} // Delete recipe
                                             className="cursor-pointer flex items-center gap-2 self-start mt-2 p-2 rounded-xl text-xl"
                                         >
                                             <FaTrash/> Smazat

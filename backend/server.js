@@ -4,6 +4,7 @@ const cors = require("cors");
 const path = require("path");
 const pool = require("./db");
 const multer = require("multer")
+const fs = require("fs").promises
 
 const app = express();
 app.use(cors());
@@ -94,6 +95,56 @@ app.post("/api/recipes", upload.single('image'), async (req, res, next) => {
     } catch (e) {
         console.error('Error in POST');
         next(e);
+    }
+});
+
+// UPDATE recipe
+app.put("/api/recipes/:id", upload.single("image"), async (req, res, next) => {
+    try {
+        const id = parseInt(req.params.id)
+        if (isNaN(id)) {
+            return res.status(400).json({message: "Invalid ID"})
+        }
+
+        // Check updated recipe
+        const { name, tag, ingredients, process, minutes, portions } = req.body;
+        if (!name || !tag || !ingredients || !process) {
+            return res.status(400).json({ message: "Missing required fields" });
+        }
+        if (isNaN(minutes) || isNaN(portions)) {
+            return res.status(400).json({message: "Minutes and portions must be numbers"})
+        }
+
+        // Fetch existing recipe image
+        const [existingRows] = await pool.query('SELECT image FROM recipes WHERE id = ?', [id])
+        if (!existingRows.length) {
+            return res.status(404).json({message: "Recipe not found"})
+        }
+
+        const imagePath = req.file ? `uploads/${req.file.filename}` : existingRows[0].image; // Use new image if uploaded, else keep existing
+
+        // Delete old image if a new one is uploaded and old one exists
+        if (req.file && existingRows[0].image) {
+            const oldImagePath = path.join(__dirname, 'public', existingRows[0].image);
+            await fs.unlink(oldImagePath).catch((err) => console.error('Failed to delete old image:', err));
+        }
+
+        // Update new recipe in database
+        const [result] = await pool.execute(
+            'UPDATE recipes SET name = ?, tag = ?, ingredients = ?, process = ?, minutes = ?, portions = ?, image = ? WHERE id = ?',
+            [name, tag, ingredients, process, minutes, portions, imagePath, id]
+        );
+        if (result.affectedRows === 0) {
+            return res.status(404).json({message: "Recipe not found"})
+        }
+
+        // Fetch updated recipe
+        const [rows] = await pool.query('SELECT * FROM recipes WHERE id = ?', [id]);
+        res.json(rows[0]);
+
+    } catch (e) {
+        console.error('Error in PUT /api/recipes/:id:', e)
+        next(e)
     }
 });
 
