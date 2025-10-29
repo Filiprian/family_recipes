@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
+import { SignInContext } from "../Context/Context";
 
 interface Recipe {
   id: string;
@@ -20,6 +21,8 @@ export default function Details() {
 
     const navigate = useNavigate();
 
+    const isAdmin = useContext(SignInContext);
+
     const [recipe, setRecipe] = useState<Recipe | null>(null);
 
     async function getRecipe() {
@@ -35,16 +38,18 @@ export default function Details() {
     }
 
     async function onDelete(deleteId: string) {
-        try {
-            const response = await fetch(`http://localhost:5000/api/recipes/${deleteId}`, {
-                method: "DELETE",
-                headers: { "Content-Type": "application/json" },
-            });
-            if (response.ok) {
-                navigate("/")
+        if (isAdmin) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/recipes/${deleteId}`, {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                });
+                if (response.ok) {
+                    navigate("/")
+                }
+            } catch (e) {
+                console.log(e)
             }
-        } catch (e) {
-            console.log(e)
         }
     }
 

@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
+import { SignInContext } from "../Context/Context";
 
 
 export default function Add() {
@@ -7,6 +8,8 @@ export default function Add() {
     const navigate = useNavigate()
 
     const {id} = useParams()
+
+    const isAdmin = useContext(SignInContext);
 
     const [error, setError] = useState("")
     const [formData, setFormData] = useState({
@@ -62,53 +65,56 @@ export default function Add() {
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (!formData.name || !formData.tag || !formData.ingredients || !formData.process || !formData.minutes || !formData.portions) {
-            setError("Vyplň všechna pole!")
-            return;
-        }
-        if (parseInt(formData.minutes) < 0 || parseInt(formData.portions) < 0) {
-            return;
-        }
-
-        setError("")
-        const dataToSend = new FormData();
-        dataToSend.append("name", formData.name);
-        dataToSend.append("tag", formData.tag);
-        dataToSend.append("ingredients", formData.ingredients);
-        dataToSend.append("process", formData.process);
-        dataToSend.append("minutes", String(parseInt(formData.minutes) || 0));
-        dataToSend.append("portions", String(parseInt(formData.portions) || 0));
-        if (formData.image) {
-            dataToSend.append("image", formData.image);
-        }
-
-
-        try {
-            // Deciding between PUT or POST method
-            const url = id ? `http://localhost:5000/api/recipes/${id}` : "http://localhost:5000/api/recipes"
-            const method = id ? "PUT" : "POST"
-            const response = await fetch(url, {
-                method: method,
-                body: dataToSend
-            })
-            if (response.ok) {
-                setFormData({
-                    name: "",
-                    tag: "Polévka",
-                    ingredients: "",
-                    process: "",
-                    minutes: "",
-                    portions: "",
-                    image: null
-                })
-                navigate("/")
+        if (isAdmin) {
+            e.preventDefault();
+            if (!formData.name || !formData.tag || !formData.ingredients || !formData.process || !formData.minutes || !formData.portions) {
+                setError("Vyplň všechna pole!")
+                return;
             }
-        } catch (e) {
-            console.error(e)
-            setError("Něco se pokazilo")
+            if (parseInt(formData.minutes) < 0 || parseInt(formData.portions) < 0) {
+                return;
+            }
+
+            setError("")
+            const dataToSend = new FormData();
+            dataToSend.append("name", formData.name);
+            dataToSend.append("tag", formData.tag);
+            dataToSend.append("ingredients", formData.ingredients);
+            dataToSend.append("process", formData.process);
+            dataToSend.append("minutes", String(parseInt(formData.minutes) || 0));
+            dataToSend.append("portions", String(parseInt(formData.portions) || 0));
+            if (formData.image) {
+                dataToSend.append("image", formData.image);
+            }
+
+
+            try {
+                // Deciding between PUT or POST method
+                const url = id ? `http://localhost:5000/api/recipes/${id}` : "http://localhost:5000/api/recipes"
+                const method = id ? "PUT" : "POST"
+                const response = await fetch(url, {
+                    method: method,
+                    body: dataToSend
+                })
+                if (response.ok) {
+                    setFormData({
+                        name: "",
+                        tag: "Polévka",
+                        ingredients: "",
+                        process: "",
+                        minutes: "",
+                        portions: "",
+                        image: null
+                    })
+                    navigate("/")
+                }
+            } catch (e) {
+                console.error(e)
+                setError("Něco se pokazilo")
+            }
         }
-    }
+        }
+        
 
     return(
         <div className="min-h-screen">
