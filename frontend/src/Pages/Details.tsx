@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import { SignInContext } from "../Context/Context";
+import DeletePopUp from "../Components/DeletePopUp";
 
 interface Recipe {
   id: string;
@@ -24,6 +25,7 @@ export default function Details() {
     const isAdmin = useContext(SignInContext);
 
     const [recipe, setRecipe] = useState<Recipe | null>(null);
+    const [popup, setPopup] = useState(false)
 
     async function getRecipe() {
         try {
@@ -51,6 +53,10 @@ export default function Details() {
                 console.log(e)
             }
         }
+    }
+
+    const handlePopup = () => {
+        setPopup(!popup)
     }
 
     useEffect(() => {
@@ -94,7 +100,7 @@ export default function Details() {
                                             <FaEdit/> Upravit
                                         </button>
                                         <button
-                                            onClick={() => onDelete(recipe.id)} // Delete recipe
+                                            onClick={handlePopup} // Call pop-up
                                             className="cursor-pointer flex items-center gap-2 self-start mt-2 p-2 rounded-xl text-xl"
                                         >
                                             <FaTrash/> Smazat
@@ -112,6 +118,13 @@ export default function Details() {
                     )
                     : <div>Nic se nenašlo</div>
             }
+            {popup && recipe && (
+              <DeletePopUp
+                key="delete-popup"
+                onDelete={() => onDelete(recipe.id)} // Delete recipe
+                onClose={handlePopup}
+              />
+            )}
         </div>
     )
 }
