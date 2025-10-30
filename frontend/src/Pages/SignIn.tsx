@@ -26,30 +26,32 @@ export default function SignIn({onAdmin, onGuest}: SignInProps) {
 
 
     return (
-        <main className="min-h-screen m-auto">
-            <div className="p-3 outline outline-black rounded-xl max-w-85 flex flex-col items-center justify-center">
-                <h1 className="text-3xl">Přihlásit se jako...</h1>
-                <button
-                    className="cursor-pointer flex items-center gap-2 mt-2 p-2 rounded-xl text-xl"
-                    onClick={() => setPopUp(true)}>
-                    Admin
-                </button>
-                <button
-                    className="cursor-pointer flex items-center gap-2 mt-2 p-2 rounded-xl text-xl"
-                    onClick={onGuest}>
-                    Host
-                </button>
+        <main className="min-h-screen">
+            <div className="mt-20 m-auto p-3 bg-[#d9e8d7] rounded-xl max-w-85 flex flex-col gap-3 items-center justify-center">
+                <h1 className="text-3xl font-bold">Přihlásit se jako...</h1>
+                <div className="gap-4 flex">
+                    <button
+                        className=" bg-black text-white p-2 rounded-xl text-2xl"
+                        onClick={() => setPopUp(true)}>
+                        Admin
+                    </button>
+                    <button
+                        className=" bg-black text-white p-2 rounded-xl text-2xl"
+                        onClick={onGuest}>
+                        Host
+                    </button>
+                </div>
             </div>
 
 
             {popUp && 
-                <div className="m-auto gap-5 flex flex-col items-center rounded-xl max-w-100 min-h-screen">
+                <div className="mt-20 bg-[#d9e8d7] m-auto gap-5 pt-8 pb-8 flex flex-col items-center rounded-xl max-w-100">
                     <h1 className="font-bold text-4xl">Zadej kód:</h1>
                     {error && <h2 className="text-red-600 text-2xl">Špatný kód!</h2>}
                     <form onSubmit={handleSubmit} className="flex flex-col items-center gap-5">
-                        <input className="p-1 bg-gray-300 rounded-xl" type="password" placeholder="1234...." required value={inputValue} onChange={(e)=> setInputValue(e.target.value)}/>
+                        <input className="p-1 bg-[#eef3e3] rounded-xl" type="password" placeholder="1234...." required value={inputValue} onChange={(e)=> setInputValue(e.target.value)}/>
                         <button
-                            className="cursor-pointer flex items-center gap-2 mt-2 p-2 rounded-xl text-xl"
+                            className="cursor-pointer text-white bg-black rounded-xl text-xl p-2 hover:bg-gray-500 active:bg-white active:outline active:text-black"
                             type="submit"> 
                             Potvrdit
                         </button>
