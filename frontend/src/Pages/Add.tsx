@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { SignInContext } from "../Context/Context";
+import { motion } from "framer-motion";
 
 
 export default function Add() {
@@ -190,11 +191,13 @@ export default function Add() {
                             accept="image/jpeg,image/png"
                             onChange={handleFileChange}
                         />
-                        <button
+                        <motion.button
+                            whileTap={{scale: 0.9}}
+                            whileHover={{scale: 1.1}}
                             type="submit"
                             className=" mt-10 self-start bg-black text-white p-2 rounded-xl text-xl">
                             {id ? "Upravit" : "Přidat"}
-                        </button>
+                        </motion.button>
                     </div>
                 </form>
                 {error !== "" && <div>{error}</div>}

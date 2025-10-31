@@ -3,6 +3,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import { SignInContext } from "../Context/Context";
 import DeletePopUp from "../Components/DeletePopUp";
+import { motion } from "framer-motion";
 
 interface Recipe {
   id: string;
@@ -110,18 +111,22 @@ export default function Details() {
                                         <p className="text-2xl">{recipe.portions}</p>
                                     </div>
                                         <div className="flex gap-5">
-                                            <button
+                                            <motion.button
+                                                whileTap={{scale: 0.9}}
+                                                whileHover={{scale: 1.1}}
                                                 onClick={() => navigate(`/add/${recipe.id}`)} // Edit recipe
                                                 className="cursor-pointer flex items-center gap-2 self-start mt-2 text-white bg-red-500 p-2 rounded-xl text-xl"
                                             >
                                                 <FaEdit/> Upravit
-                                            </button>
-                                            <button
+                                            </motion.button>
+                                            <motion.button
+                                                whileTap={{scale: 0.9}}
+                                                whileHover={{scale: 1.1}}
                                                 onClick={handlePopup} // Call pop-up
                                                 className="cursor-pointer flex items-center gap-2 self-start mt-2 text-white bg-red-500 p-2 rounded-xl text-xl"
                                             >
                                                 <FaTrash/> Smazat
-                                            </button>
+                                            </motion.button>
                                         </div>
                                     </div>
                                     <div className=" max-w-[1200px] max-h-[650px]">

@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 interface Recipe {
@@ -21,7 +22,9 @@ export default function FoodCard({ recipe }: { recipe: Recipe }) {
     }
 
     return (
-        <div 
+        <motion.div 
+            whileHover={{scale: 1.1}}
+            whileTap={{scale: 0.9}}
             onClick={handleClick}
             className="p-1 sm:p-2 hover:cursor-pointer bg-[#d9e8d7] rounded-xl shadow-2xl mx-auto">
             <div className="flex flex-col flex-wrap gap-2 m-2 sm:m-5">
@@ -40,6 +43,6 @@ export default function FoodCard({ recipe }: { recipe: Recipe }) {
                     src={`http://localhost:5000/${recipe.image}`}
                 />
             </div>
-        </div>
+        </motion.div>
     )
 }
