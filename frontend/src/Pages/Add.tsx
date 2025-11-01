@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { SignInContext } from "../Context/Context";
+import { motion } from "framer-motion";
 
 
 export default function Add() {
@@ -22,8 +23,9 @@ export default function Add() {
         image: null as File | null,
     })
 
-    const inputStyle = "bg-gray-300 p-1 rounded-xl max-w-60"
-    const textAreaStyle = "bg-gray-300 p-1 rounded-xl max-w-120 min-h-35"
+    // Styling tailwind classes
+    const inputStyle = "bg-[#eef3e3] p-1 rounded-xl max-w-60"
+    const textAreaStyle = "bg-[#eef3e3] p-1 rounded-xl max-w-120 min-h-35"
     const labelStyle = "text-xl font-bold"
 
     async function getRecipe() {
@@ -118,6 +120,7 @@ export default function Add() {
 
     return(
         <div className="min-h-screen">
+            <header className={"h-5 m-5 bg-[#BFD8BD] rounded-xl"}></header>
             <h1 className="text-5xl font-bold mt-10 mb-10">{id ? "Uprav recept:" : "Přidaj recept:"}</h1>
             <main className="p-2 flex flex-col items-center justify-center align-center gap-1">
                 <form onSubmit={handleSubmit} className="flex gap-50">
@@ -134,7 +137,7 @@ export default function Add() {
                         <div>
                             <label className={labelStyle}>Typ:</label>
                             <select
-                                className="bg-gray-300 text-black p-2 rounded-xl cursor-pointer"
+                                className="bg-[#eef3e3] text-black p-2 rounded-xl cursor-pointer"
                                 name="tag"
                                 value={formData.tag}
                                 onChange={handleChange}
@@ -182,17 +185,19 @@ export default function Add() {
                         />
                         <label className={labelStyle}>Obrázek:</label>
                         <input
-                            className="bg-white p-1 rounded-xl max-w-50 cursor-pointer"
+                            className="bg-[#eef3e3] p-1 rounded-xl max-w-50 cursor-pointer"
                             type="file"
                             name="image"
                             accept="image/jpeg,image/png"
                             onChange={handleFileChange}
                         />
-                        <button
+                        <motion.button
+                            whileTap={{scale: 0.9}}
+                            whileHover={{scale: 1.1}}
                             type="submit"
-                            className=" mt-10 self-start p-2 rounded-xl text-xl">
+                            className=" mt-10 self-start bg-black text-white p-2 rounded-xl text-xl">
                             {id ? "Upravit" : "Přidat"}
-                        </button>
+                        </motion.button>
                     </div>
                 </form>
                 {error !== "" && <div>{error}</div>}

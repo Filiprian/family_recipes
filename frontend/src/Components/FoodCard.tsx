@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 interface Recipe {
@@ -21,24 +22,27 @@ export default function FoodCard({ recipe }: { recipe: Recipe }) {
     }
 
     return (
-        <div 
+        <motion.div 
+            whileHover={{scale: 1.1}}
+            whileTap={{scale: 0.9}}
             onClick={handleClick}
-            className="p-2 hover:cursor-pointer shadow-2xl mx-auto rounded-xl">
-            <div className="flex flex-col flex-wrap gap-2 m-5 items-start justify-start align-left">
-                <h1 className="text-3xl font-bold truncate">
+            className="p-1 sm:p-2 hover:cursor-pointer bg-[#d9e8d7] rounded-xl shadow-2xl mx-auto">
+            <div className="flex flex-col flex-wrap gap-2 m-2 sm:m-5">
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold truncate">
                     {recipe.name}
                 </h1>
-                <h2 className="rounded-md font-bold text-md p-2 whitespace-nowrap max-w-fit text-center">
+                <h2 className="bg-[#00d382] rounded-md font-bold text-[#feffeb] text-sm 
+                sm:text-base md:text-md sm:p-2 p-1 whitespace-nowrap max-w-fit text-center">
                     {recipe.tag}
                 </h2>
             </div>
             <div className="flex justify-center items-center max-w-[300px] mx-auto">
                 <img
-                    className="max-h-[350px] rounded-xl w-full object-cover"
+                    className="max-h-[200px] sm:max-h-[250px] md:max-h-[350px] rounded-xl w-full object-cover"
                     alt="Obrázek"
                     src={`http://localhost:5000/${recipe.image}`}
                 />
             </div>
-        </div>
+        </motion.div>
     )
 }

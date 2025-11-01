@@ -1,3 +1,5 @@
+import { motion } from "framer-motion"
+import { useState } from "react"
 import {FaTrash, FaAngleLeft} from "react-icons/fa"
 
 interface DeleteProps {
@@ -7,25 +9,64 @@ interface DeleteProps {
 
 export default function DeletePopup({onClose, onDelete}:DeleteProps) {
 
+    const [isOn, setIsOn] = useState(true)
+
+    // Animation variants
+    const showAnimation = {
+        hidden: {
+            y: -500,
+            scale: 0,
+            opacity: 0
+        },
+        show: {
+            y: 0,
+            scale: 1,
+            opacity: 1
+        }
+    }
+    const hideAnimation = {
+        hidden: {
+            y: 0,
+            scale: 1,
+            opacity: 1
+        },
+        show: {
+            y: -500,
+            scale: 0,
+            opacity: 0
+        }
+    }
+
+    const handleClose = () => {
+        setIsOn(false)
+        setTimeout(onClose, 300);
+    }
+
     return(
-        <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="m-auto bg-gray-300 gap-2 flex flex-col items-center rounded-xl max-w-100 min-h-35 translate-y-[-150%]">
+        <motion.div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50"
+            initial={isOn ? showAnimation.hidden : hideAnimation.hidden}
+            animate={isOn ? showAnimation.show : hideAnimation.show}>
+            <div className="m-auto bg-[#eef3e3] gap-2 flex flex-col items-center rounded-xl max-w-100 min-h-35 translate-y-[-150%]">
                 <h1 className="text-center font-bold text-3xl">Opravdu chcete tento recept vymazat?</h1>
                 <div className="flex flex-row gap-3">
-                    <button
-                        className="cursor-pointer flex items-center gap-2 mt-2 p-2 rounded-xl text-xl"
-                        onClick={onClose}>
+                    <motion.button
+                        whileHover={{scale: 1.1}}
+                        whileTap={{scale: 0.9}}
+                        className="flex gap-1 items-center cursor-pointer self-start mt-2 text-white p-2 rounded-xl text-xl"
+                        onClick={handleClose}>
                         <FaAngleLeft/>
                         Zanechat
-                    </button>
-                    <button
-                        className="cursor-pointer flex items-center gap-2 mt-2 p-2 rounded-xl text-xl"
+                    </motion.button>
+                    <motion.button
+                        whileHover={{scale: 1.1}}
+                        whileTap={{scale: 0.9}}
+                        className="flex gap-1 items-center cursor-pointer self-start mt-2 text-white p-2 rounded-xl text-xl"
                         onClick={onDelete}>
                         <FaTrash/>
                         Smazat
-                    </button>
+                    </motion.button>
                 </div>
             </div>
-        </div>
+        </motion.div>
     )
 }
