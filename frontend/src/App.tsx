@@ -10,7 +10,7 @@ import { SignInContext } from './Context/Context'
 
 function App() {
 
-  const [isAdmin, setIsAdmin] = useState(false)
+  const [isAdmin, setIsAdmin] = useState("")
 
   const navigate = useNavigate()
 
@@ -18,7 +18,7 @@ function App() {
   useEffect(() => {
     const storedAuth = localStorage.getItem("Admin")
     if (storedAuth === "true") {
-        setIsAdmin(true)
+        setIsAdmin("Admin")
     }
   }, []);
 
@@ -27,13 +27,19 @@ function App() {
   // Storing user role
   function onAdmin () {
     localStorage.setItem("Admin", "true")
-    setIsAdmin(true)
+    setIsAdmin("Admin")
     navigate("/")
   }
   function onGuest () {
     localStorage.setItem("Admin", "false")
-    setIsAdmin(false)
+    setIsAdmin("Guest")
     navigate("/")
+  }
+
+  if (isAdmin === "") {
+    return (
+      <SignIn onAdmin={onAdmin} onGuest={onGuest}/>
+    )
   }
 
 

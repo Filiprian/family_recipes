@@ -1,3 +1,3 @@
 import { createContext } from "react";
 
-export const SignInContext = createContext<boolean>(false);
+export const SignInContext = createContext<string>("");

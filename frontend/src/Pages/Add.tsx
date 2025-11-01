@@ -65,7 +65,7 @@ export default function Add() {
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        if (isAdmin) {
+        if (isAdmin === "Admin") {
             e.preventDefault();
             if (!formData.name || !formData.tag || !formData.ingredients || !formData.process || !formData.minutes || !formData.portions) {
                 setError("Vyplň všechna pole!")

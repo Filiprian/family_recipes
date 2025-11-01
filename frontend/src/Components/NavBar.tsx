@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { SignInContext } from "../Context/Context";
 import { useContext } from "react";
+import { FaUser } from "react-icons/fa";
 
 
 export default function NavBar() {
@@ -19,8 +20,9 @@ export default function NavBar() {
             </div>
             <div 
             onClick={() => navigate("/sign-in")}
-            className="flex justify-end items-end text-3xl cursor-pointer">
-                {isAdmin ? "Admin" : "Host"}
+            className="bg-[#00d382] rounded-md font-bold text-[#feffeb] text-xl cursor-pointer p-2 whitespace-nowrap max-w-fit items-center text-center flex gap-2">
+                <FaUser/>
+                {isAdmin === "Admin" ? "Admin" : "Host"}
             </div>
         </nav>
     )

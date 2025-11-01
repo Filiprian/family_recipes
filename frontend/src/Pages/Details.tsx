@@ -40,7 +40,7 @@ export default function Details() {
     }
 
     async function onDelete(deleteId: string) {
-        if (isAdmin) {
+        if (isAdmin === "Admin") {
             try {
                 const response = await fetch(`http://localhost:5000/api/recipes/${deleteId}`, {
                     method: "DELETE",
