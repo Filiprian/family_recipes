@@ -12,8 +12,8 @@ export default function NavBar() {
     const isAdmin = useContext(SignInContext);
 
     return (
-        <nav className="flex justify-between items-center px-6 py-4">
-            <div className="flex justify-center m-0 gap-10 text-4xl font-bold">
+        <nav className="flex flex-col sm:flex-row gap-2 justify-between items-center px-6 py-4">
+            <div className="flex justify-center m-0 gap-10 sm:text-4xl text-2xl font-bold">
                 <motion.div
                     whileHover={{scale: 1.2}}
                     whileTap={{scale: 0.9}}>

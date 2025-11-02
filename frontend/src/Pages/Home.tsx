@@ -37,7 +37,7 @@ export default function Home() {
 
     return (
         <div className="min-h-screen">
-            <header className="flex gap-20 justify-center bg-[#BFD8BD] text-white rounded-xl p-5">
+            <header className="flex sm:flex-row flex-col sm:gap-20 gap-2 justify-center bg-[#BFD8BD] text-white rounded-xl p-5">
                 <input onChange={(e) => setSearch(e.target.value)} type="text" placeholder="Řízky" className="p-2 rounded-xl text-black bg-white"/>
                 <select onChange={(e) => setTag(e.target.value)} id="type" className="bg-white text-black p-2 rounded-xl cursor-pointer">
                     <option className="cursor-pointer">Vše</option>
@@ -48,8 +48,8 @@ export default function Home() {
                 </select>
             </header>
             
-            <h1 className="text-5xl font-bold mt-10 mb-10">Rodinné recepty:</h1>
-            <main className="grid md:grid-cols-4 sm:grid-cols-3 grid-cols-1 gap-5">
+            <h1 className="sm:text-5xl text-4xl font-bold mt-10 mb-10">Rodinné recepty:</h1>
+            <main className="grid xl:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-5">
                 {
                     recipes && recipes.length > 0
                         ? recipes

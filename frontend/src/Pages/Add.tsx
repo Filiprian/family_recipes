@@ -121,9 +121,9 @@ export default function Add() {
     return(
         <div className="min-h-screen">
             <header className={"h-5 m-5 bg-[#BFD8BD] rounded-xl"}></header>
-            <h1 className="text-5xl font-bold mt-10 mb-10">{id ? "Uprav recept:" : "Přidaj recept:"}</h1>
+            <h1 className="sm:text-5xl text-4xl font-bold mt-10 mb-10">{id ? "Uprav recept:" : "Přidaj recept:"}</h1>
             <main className="p-2 flex flex-col items-center justify-center align-center gap-1">
-                <form onSubmit={handleSubmit} className="flex gap-50">
+                <form onSubmit={handleSubmit} className="flex sm:flex-row flex-col sm:gap-50 gap-5">
                     <div className="flex flex-col gap-3">
                         <label className={labelStyle}>Název:</label>
                         <input

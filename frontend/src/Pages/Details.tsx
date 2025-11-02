@@ -81,10 +81,10 @@ export default function Details() {
                     ? (
                         <>
                             <header className="h-5 z-10 m-5 bg-[#BFD8BD] rounded-xl"></header>
-                            <main className="flex gap-5 md:gap-50 sm:gap-10 outline-black min-h-[50vh] flex-col sm:flex-row">
+                            <main className="flex gap-5 xl:gap-50 md:gap-10 outline-black min-h-[50vh] flex-col xl:flex-row">
                                 <div className="p-5 flex flex-col max-w-275 gap-2">
                                     <div className="flex gap-3">
-                                        <h1 className="text-4xl font-bold">{recipe.name}</h1>
+                                        <h1 className="sm:text-4xl text-3xl font-bold">{recipe.name}</h1>
                                         <h3 className="bg-[#00d382] rounded-md font-bold text-[#feffeb] text-sm sm:text-base md:text-lg sm:p-2 p-1 whitespace-nowrap max-w-fit text-center">
                                         {recipe.tag}
                                         </h3>
@@ -98,9 +98,9 @@ export default function Details() {
                                         }
                                     </ul>
                                     </div>
-                                    <div className="flex gap-2">
+                                    <div className="flex sm:flex-row flex-col gap-2">
                                         <p className="text-2xl font-bold">Postup: </p>
-                                        <p className="text-2xl">{recipe.process}</p>
+                                        <p className="text-2xl max-w-150">{recipe.process}</p>
                                     </div>
                                     <div className="flex gap-2">
                                         <p className="text-2xl font-bold">Doba vaření: </p>
