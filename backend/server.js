@@ -5,16 +5,52 @@ const path = require("path");
 const pool = require("./db");
 const multer = require("multer")
 const fs = require("fs").promises
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 
 const app = express();
-app.use(cors());
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Disable x-powered-by
+app.disable("x-powered-by");
+
+// Create uploads directory if not exists
+const uploadsDir = path.join(__dirname, "public/uploads");
+fs.mkdir(uploadsDir, { recursive: true }).catch(console.error);
+
+// Helmet for security headers
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'"],
+      imgSrc: ["'self'", "data:"],
+    },
+  },
+    crossOriginResourcePolicy: false
+}));
+
+// Rate limiting for /api routes
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
+app.use("/api", apiLimiter);
+
+// CORS with origin restriction
+const allowedOrigin = process.env.FRONTEND_ORIGIN || "http://localhost:3000";
+app.use(cors({
+  origin: allowedOrigin,
+}));
+
+// Limit JSON body size
+app.use(express.json({ limit: "1mb" }));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Configuring Multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "public/uploads/")
+        cb(null, uploadsDir)
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9)
@@ -60,7 +96,6 @@ app.get("/api/recipes", async (req, res, next) => {
         console.log('Query successful');
         res.json(rows);
     } catch (e) {
-        console.error('Error in GET all');
         next(e);
     }
 });
@@ -73,7 +108,6 @@ app.get("/api/recipes/:id", async (req, res, next) => {
         res.json(rows[0]);
         console.log('Query successful');
     } catch (e) {
-        console.error('Error in GET one');
         next(e);
     }
 });
@@ -93,7 +127,6 @@ app.post("/api/recipes", upload.single('image'), async (req, res, next) => {
         const [rows] = await pool.query('SELECT * FROM recipes WHERE id = ?', [result.insertId]);
         res.status(201).json(rows[0]);
     } catch (e) {
-        console.error('Error in POST');
         next(e);
     }
 });
@@ -168,7 +201,6 @@ app.delete("/api/recipes/:id", async (req, res, next) => {
         if (result.affectedRows === 0) return res.status(404).json({message: "Not found"});
         res.json({message: "Deleted"});
     } catch (e) {
-        console.error('Error in DELETE');
         next(e);
     }
 });
